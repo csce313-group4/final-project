@@ -57,7 +57,7 @@
       <workItem from="1572976910595" duration="147000" />
       <workItem from="1572977072416" duration="854000" />
       <workItem from="1572991669554" duration="3319000" />
-      <workItem from="1573014821282" duration="1778000" />
+      <workItem from="1573014821282" duration="1966000" />
     </task>
     <task id="LOCAL-00001" summary="create react function component for recommendations and test importing into App.js; also undo previous gitignore change">
       <created>1573015590600</created>
@@ -66,7 +66,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573015590600</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="test recommendations api using react function component">
+      <created>1573016637665</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1573016637665</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -87,6 +94,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="create react function component for recommendations and test importing into App.js; also undo previous gitignore change" />
-    <option name="LAST_COMMIT_MESSAGE" value="create react function component for recommendations and test importing into App.js; also undo previous gitignore change" />
+    <MESSAGE value="test recommendations api using react function component" />
+    <option name="LAST_COMMIT_MESSAGE" value="test recommendations api using react function component" />
   </component>
 </project>
