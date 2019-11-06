@@ -35,10 +35,14 @@ class Recommendations extends React.Component {
         http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 
         let thisComponent = this;
+        const DONE = 4;
         http.onreadystatechange = function () {
-            thisComponent.setState({
-                token: JSON.parse(http.responseText)['access_token']
-            });
+            if (http.readyState == DONE && http.status == 200) {
+                thisComponent.setState({
+                    token: JSON.parse(http.responseText)['access_token']
+                });
+            }
+            // FIXME: add error handling for other http cases and JSON.parse failure or access_token key error
         }
 
         let params = "grant_type=client_credentials";
@@ -46,28 +50,31 @@ class Recommendations extends React.Component {
         http.send(params);
     }
 
-    // FIXME: need another way to call getRecommendations (some event the other components can trigger?) after mounting
+    // TODO: need another way to call getRecommendations (some event the other components can trigger?) after mounting
     //  so other components can use it (e.g. when user submits a photo and the other API components pass in data) UNLESS
     //  all data will come in through props? (can parent update props and this component re-renders automatically?)
     getRecommendations() {
         // request a song recommendation
         let url = 'https://api.spotify.com/v1/recommendations';
-        const DONE = 4;
-        // FIXME: replace these hard coded api parameters (using props?)
-        url += '?market=US&seed_artists=4NHQUGzhtTLFvgF5SZesLK&seed_tracks=0c6xIDDpzE81m2q797ordA&min_energy=0.4&min_popularity=50';
+        // TODO: replace these hard coded api parameters (using props?)
+        let params = '?' + ['market=US', 'seed_artists=4NHQUGzhtTLFvgF5SZesLK', 'seed_tracks=0c6xIDDpzE81m2q797ordA', 'min_energy=0.4', 'min_popularity=50'].join('&');
+        url += params;
 
         let http = new XMLHttpRequest();
         http.open('GET', url);
-        http.setRequestHeader('Authorization', 'Bearer BQCORkhTuDC5KmG5jJVLbg6vsgAbZMIcm-ufGbaJ_GBR6H-R5jvOxw29AcilNvc0B78z3olKqEF2OF8T_D7LRP251ff2xjPwKwehJtJwtKzSWaAa4-mIKpPlxdBTuGj99t80wmv9gQfIgjW6UsoDk23GXkc-p-U');
+        // FIXME: could this run before getting a token finishes? should I call getToken here if needed and wait on it to finish somehow?
+        http.setRequestHeader('Authorization', 'Bearer ' + this.state.token);
 
         let thisComponent = this;
+        const DONE = 4;
         http.onreadystatechange = function () {
             if (http.readyState == DONE && http.status == 200) {
                 thisComponent.setState({
                     response: http.responseText
                 });
             }
-            // FIXME: add error handling for other cases
+            // FIXME: add error handling for other http cases (actually it would be okay to leave response null if we don't get multiple
+            //  recommendations from same component... if we do, then it should probably check new recommendation is different?)
         };
 
         http.send();
@@ -77,7 +84,7 @@ class Recommendations extends React.Component {
         // based on state of http requests, either display a loading message or the http response
         let recommendations = "Recommendations loading...";
         if (this.state.response != null) {
-            // FIXME: later parse response to provide only useful info to user
+            // TODO: later parse response to provide only useful info to user
             recommendations = this.state.response;
         }
 

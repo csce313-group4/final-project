@@ -59,7 +59,7 @@
       <workItem from="1572977072416" duration="854000" />
       <workItem from="1572991669554" duration="3319000" />
       <workItem from="1573014821282" duration="6617000" />
-      <workItem from="1573058949988" duration="2821000" />
+      <workItem from="1573058949988" duration="4177000" />
     </task>
     <task id="LOCAL-00001" summary="create react function component for recommendations and test importing into App.js; also undo previous gitignore change">
       <created>1573015590600</created>
@@ -89,7 +89,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573018384506</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="add method to get an oauth token for use in recommendations api calls">
+      <created>1573063055083</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1573063055083</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,6 +121,7 @@
     <MESSAGE value="refactor function component as (class) component as preparation for managing oauth token state and async requests" />
     <MESSAGE value="add explicit construction to support state, add async http request to componentDidMount lifecycle hook, add conditional rendering to match" />
     <MESSAGE value="add explicit construction to support state, create componentDidMount lifecycle hook to contain async http req, add conditional rendering to match" />
-    <option name="LAST_COMMIT_MESSAGE" value="add explicit construction to support state, create componentDidMount lifecycle hook to contain async http req, add conditional rendering to match" />
+    <MESSAGE value="add method to get an oauth token for use in recommendations api calls" />
+    <option name="LAST_COMMIT_MESSAGE" value="add method to get an oauth token for use in recommendations api calls" />
   </component>
 </project>
