@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="3be9700f-ee9c-497d-a327-15948c7b7fff" name="Default Changelist" comment="add explicit construction to support state, add async http request to componentDidMount lifecycle hook, add conditional rendering to match">
+    <list default="true" id="3be9700f-ee9c-497d-a327-15948c7b7fff" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Recommendations.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Recommendations.js" afterDir="false" />
     </list>
@@ -58,7 +58,8 @@
       <workItem from="1572976910595" duration="147000" />
       <workItem from="1572977072416" duration="854000" />
       <workItem from="1572991669554" duration="3319000" />
-      <workItem from="1573014821282" duration="3489000" />
+      <workItem from="1573014821282" duration="6617000" />
+      <workItem from="1573058949988" duration="2821000" />
     </task>
     <task id="LOCAL-00001" summary="create react function component for recommendations and test importing into App.js; also undo previous gitignore change">
       <created>1573015590600</created>
@@ -81,7 +82,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573016868913</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="add explicit construction to support state, create componentDidMount lifecycle hook to contain async http req, add conditional rendering to match">
+      <created>1573018384506</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1573018384506</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -105,6 +113,7 @@
     <MESSAGE value="test recommendations api using react function component" />
     <MESSAGE value="refactor function component as (class) component as preparation for managing oauth token state and async requests" />
     <MESSAGE value="add explicit construction to support state, add async http request to componentDidMount lifecycle hook, add conditional rendering to match" />
-    <option name="LAST_COMMIT_MESSAGE" value="add explicit construction to support state, add async http request to componentDidMount lifecycle hook, add conditional rendering to match" />
+    <MESSAGE value="add explicit construction to support state, create componentDidMount lifecycle hook to contain async http req, add conditional rendering to match" />
+    <option name="LAST_COMMIT_MESSAGE" value="add explicit construction to support state, create componentDidMount lifecycle hook to contain async http req, add conditional rendering to match" />
   </component>
 </project>
