@@ -18,11 +18,13 @@ class App extends React.Component {
         emotions: this.props.emotions,
         age: 20,
         loadSong: false,
-        videoId: "dQw4w9WgXcQ",
+        playlistId: "",
       };
-
         this.onSelectImage = this.onSelectImage.bind(this);
         this.onTakePhotoAnimationDone = this.onTakePhotoAnimationDone.bind(this);
+        this.getAge = this.getAge(this);
+        this.getEmotions = this.getEmotions(this);
+        this.getRecs = this.getRecs(this);
   }
 
 
@@ -37,6 +39,34 @@ class App extends React.Component {
               loadSong: true
           } );
       }
+
+      getAge() {
+        var age = this.state.age;
+        this.setState({loading: true});
+
+        //Call api here, change age
+
+        this.setState({age:age, loading: false});
+      }
+
+      getEmotions(){
+        var emotions = this.state.emotions;
+        this.setState({loading: true});
+
+
+        // Call api here, change emotions
+        this.setState({emotions:emotions, loading: false});
+
+        }
+
+        getRecs(){
+        var age = this.state.age;
+        var emotions = this.state.emotions;
+        var playlistId = this.state.playlistId;
+        this.setState({loading:true});
+        // set recs
+        this.setState({playlistId: playlistId,loading:false});
+        }
 
 
       render()
