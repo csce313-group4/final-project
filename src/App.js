@@ -63,6 +63,7 @@ class App extends React.Component {
         var age = this.state.age;
         var emotions = this.state.emotions;
         var playlistId = this.state.playlistId;
+        //michael, set a playlist id from this
         this.setState({loading:true});
         // set recs
         this.setState({playlistId: playlistId,loading:false});

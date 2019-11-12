@@ -1,0 +1,14 @@
+1950, happy: https://www.youtube.com/playlist?list=PLNDhBcjuPp0-UCSML4DxFqqc5WN4aGcW1
+1950, sad: https://www.youtube.com/playlist?list=PLjLPKGJvC8TuhpLXMhskQUaC26zSBjCsM
+1960, happy: https://www.youtube.com/playlist?list=PLPKXtd2AJvNkaZgrb0yK3UoQk7487TceH
+1960, sad: https://www.youtube.com/playlist?list=PLAZH8pP5KBzXiSfcH_2GgoDeXjtTUF3sM
+1970, happy: https://www.youtube.com/playlist?list=PL9QL1AvNabH5u2gfi48VogStrPUY_LijY
+1970, sad: https://www.youtube.com/playlist?list=PLjyiHjKMhSuK-rChCn2Xl4RNfUcUhx-qA
+1980, happy: https://www.youtube.com/playlist?list=PL857_Yj5tf8cek2iOFyZBE9XSOLOhW-0m
+1980, sad: https://www.youtube.com/playlist?list=PLT_7RtTUm0XwsUHTCuQog7xknmMCuvr4B
+1990, happy https://www.youtube.com/playlist?list=PLLWfa8Ng-FdBamt3JCTadmbdd9UtLFZ7K
+1990, sad: https://www.youtube.com/playlist?list=PLu1jpc624xfKGhWItKFNRPu7QylkwS-OR
+2000, happy: https://www.youtube.com/playlist?list=PLPf_PZG3-WAGq4tgjU6m87Ksndn2Jz2OF
+2000, sad: https://www.youtube.com/playlist?list=PLIWqGUaiQxN7kL47fzQ87h0OlTaCyr8-o
+2010, happy: https://www.youtube.com/playlist?list=PLeZgwVkN7bbfVLcqnz9l5RjASqUkBtpBe
+2010, sad: https://www.youtube.com/playlist?list=PL5D7fjEEs5yflZzSZAhxfgQmN6C_6UJ1W
