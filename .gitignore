@@ -4,6 +4,7 @@
 /node_modules
 /.pnp
 /.idea
+/.idea/workspace.xml
 .pnp.js
 
 # testing

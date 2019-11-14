@@ -4,10 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import YouTube from 'react-youtube';
+import 'react-youtube-playlist/dist/styles.scss'
 import ClipLoader from 'react-spinners/ClipLoader';
+import LoadingOverlay from 'react-loading-overlay'
 import ImagePreview from './ImagePreview';
-import Button from 'react-bootstrap/Button';
-import Navbar from 'react-bootstrap/Navbar';
+
 
 class App extends React.Component {
     constructor(props, context) {
@@ -18,17 +19,36 @@ class App extends React.Component {
             emotions: this.props.emotions,
             age: 20,
             loadSong: false,
-            playlistId: "",
+            opts: {
+            height: '900',
+                width: '1600',
+            playerVars: { // https://developers.google.com/youtube/player_parameters
+                autoplay: 1,
+                listType: 'playlist',
+                list: 'PLNDhBcjuPp0-UCSML4DxFqqc5WN4aGcW1',
+                playsinline: 1,
+                modestbranding: 1,
+                controls: 0
+            }
+            }
         };
         this.onSelectImage = this.onSelectImage.bind(this);
         this.onTakePhotoAnimationDone = this.onTakePhotoAnimationDone.bind(this);
         this.getAge = this.getAge(this);
         this.getEmotions = this.getEmotions(this);
         this.getRecs = this.getRecs(this);
+        this.getMusicYearFromAge = this.getMusicYearFromAge(this);
+        this.isThisEmotionHappy = this.isThisEmotionHappy(this);
+        this.getPlaylistFromParams = this.getPlaylistFromParams(this);
     }
 
     onTakePhotoAnimationDone(dataUri) {
-        this.setState({dataUri});
+        this.setState({dataUri, loading: true});
+        this.getAge();
+        this.getEmotions();
+        this.getRecs();
+        this.setState({loading: false, loadSong: true})
+
     }
 
     onSelectImage() {
@@ -41,20 +61,18 @@ class App extends React.Component {
 
     getAge() {
         var age = this.state.age;
-        this.setState({loading: true});
 
         //Call api here, change age
 
-        this.setState({age: age, loading: false});
+        this.setState({age: age});
     }
 
     getEmotions() {
         var emotions = this.state.emotions;
-        this.setState({loading: true});
 
 
         // Call api here, change emotions
-        this.setState({emotions: emotions, loading: false});
+        this.setState({emotions: emotions});
 
     }
 
@@ -90,13 +108,14 @@ class App extends React.Component {
         var happyConf = 0.0;
         var sadConf = 0.0;
 
-        emotion.forEach(function (item, index) {
+        for (var i = 0; i < emotion.length; i++){
+            var item = emotion[i];
             if (item.label.localeCompare("happy") === 0) {
                 happyConf = item.confidence;
             } else if (item.label.localeCompare("sad") === 0) {
                 sadConf = item.confidence;
             }
-        });
+        }
 
         if (sadConf > happyConf) {
             return false;
@@ -164,37 +183,23 @@ class App extends React.Component {
     getRecs() {
         var age = this.state.age;
         var emotions = this.state.emotions;
-        var playlistId = this.state.playlistId;
-
+        var opts = this.state.opts;
         //get the playlistId
         var musicYear = this.getMusicYearFromAge(age);
         var isHappy = this.isThisEmotionHappy(emotions);
-        playlistId = this.getPlaylistFromParams(musicYear, isHappy);
+        opts.playerVars.list = this.getPlaylistFromParams(musicYear, isHappy);
 
-        this.setState({loading: true});
         // set recs
-        this.setState({playlistId: playlistId, loading: false});
+        this.setState({opts: opts});
     }
 
 
     render() {
-        const opts = {
-            height: '390',
-            width: '640',
-            playerVars: { // https://developers.google.com/youtube/player_parameters
-                autoplay: 1
-            }
-        };
-        if (this.state.loading) {
-            return (<div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
-                <ClipLoader sizeUnit={"px"} size={100} color={'#36d7b7'} loading={this.state.loading}/>
-            </div>)
-        } else if (this.state.loadSong) {
+         if (this.state.loadSong) {
             return (
-                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
+                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
                     <YouTube
-                        videoId="dQw4w9WgXcQ"
-                        opts={opts}
+                        opts={this.state.opts}
                     />
                 </div>)
         } else {
@@ -202,16 +207,11 @@ class App extends React.Component {
 
                 <div className="App">
                     {
-                        (this.state.dataUri)
-                            ? <ImagePreview dataUri={this.state.dataUri} isFullscreen={false}/>
+                        (this.state.loading)
+                            ? <LoadingOverlay active={true} spinner = {<ClipLoader sizeUnit={"px"} size={100} color={'#36d7b7'} loading={true}/>}>
+                                    <p><ImagePreview isFullscreen={false} dataUri={this.state.dataUri} /> </p></LoadingOverlay>
                             : <Camera onTakePhotoAnimationDone={this.onTakePhotoAnimationDone}/>
                     }
-                    <div>
-                        <Navbar bg="dark" variant="dark" sticky="top">
-                            <Button variant="primary" onClick={this.onSelectImage}>Get Recommendation</Button>
-                        </Navbar>
-                    </div>
-
                 </div>
             );
         }
