@@ -17,11 +17,11 @@ class App extends React.Component {
             dataUri: null,
             loading: false,
             emotions: this.props.emotions,
+            isHappy: true,
             age: 20,
             loadSong: false,
             opts: {
-            height: '900',
-                width: '1600',
+            height: '800px', width: '960px',
             playerVars: { // https://developers.google.com/youtube/player_parameters
                 autoplay: 1,
                 listType: 'playlist',
@@ -34,21 +34,24 @@ class App extends React.Component {
         };
         this.onSelectImage = this.onSelectImage.bind(this);
         this.onTakePhotoAnimationDone = this.onTakePhotoAnimationDone.bind(this);
-        this.getAge = this.getAge(this);
-        this.getEmotions = this.getEmotions(this);
-        this.getRecs = this.getRecs(this);
-        this.getMusicYearFromAge = this.getMusicYearFromAge(this);
-        this.isThisEmotionHappy = this.isThisEmotionHappy(this);
-        this.getPlaylistFromParams = this.getPlaylistFromParams(this);
+        this.getAge = this.getAge.bind(this);
+        this.getEmotions = this.getEmotions.bind(this);
+        this.getRecs = this.getRecs.bind(this);
+        this.getMusicYearFromAge = this.getMusicYearFromAge.bind(this);
+        this.isThisEmotionHappy = this.isThisEmotionHappy.bind(this);
+        this.getPlaylistFromParams = this.getPlaylistFromParams.bind(this);
     }
 
-    onTakePhotoAnimationDone(dataUri) {
-        this.setState({dataUri, loading: true});
-        this.getAge();
-        this.getEmotions();
+    async onTakePhotoAnimationDone(dataUri) {
+        this.setState({dataUri: dataUri, loading: true});
+
+        await Promise.all([this.getAge(), this.getEmotions()]);
+        console.log("here we go" + this.state.age);
+
+        //join here
+
         this.getRecs();
         this.setState({loading: false, loadSong: true})
-
     }
 
     onSelectImage() {
@@ -59,12 +62,36 @@ class App extends React.Component {
         });
     }
 
-    getAge() {
+    async getAge() {
         var age = this.state.age;
+        const azureSubscriptionKey = "AZURE SUBSCRIPTION KEY";
+        const uri = "https://southcentralus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=false&returnFaceLandmarks=false&returnFaceAttributes=age"
 
-        //Call api here, change age
+        var buff = new Buffer(this.state.dataUri.replace(/^data:image\/(png|gif|jpeg);base64,/, ''), 'base64');
 
-        this.setState({age: age});
+        let currentState = this;
+
+        fetch(uri, {
+            method: 'post',
+            body: buff,
+            headers: {
+                'Content-Type': 'application/octet-stream',
+                'Ocp-Apim-Subscription-Key': azureSubscriptionKey,
+            }
+        }).then((res) => res.json())
+            .then(function (data) {
+                if(data.length > 0){
+                    age = data[0].faceAttributes.age;
+                    currentState.setState({
+                        age: age,
+                    });
+                    console.log(age);
+                }
+                else {
+                    age = -1;
+                    console.log("NO FACES FOUND");
+                }
+            });
     }
 
     getEmotions() {
@@ -190,26 +217,28 @@ class App extends React.Component {
         opts.playerVars.list = this.getPlaylistFromParams(musicYear, isHappy);
 
         // set recs
-        this.setState({opts: opts});
+        this.setState({opts: opts, isHappy: isHappy});
     }
 
 
     render() {
          if (this.state.loadSong) {
             return (
-                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
+                <div style={{justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
+                    <h3><strong>Your personalized music selection</strong></h3><br/>
+                    <h2>Age: {this.state.age}</h2>
+                    <h2>Happy: {this.state.isHappy.toString()}</h2>
                     <YouTube
                         opts={this.state.opts}
                     />
                 </div>)
         } else {
             return (
-
                 <div className="App">
                     {
                         (this.state.loading)
                             ? <LoadingOverlay active={true} spinner = {<ClipLoader sizeUnit={"px"} size={100} color={'#36d7b7'} loading={true}/>}>
-                                    <p><ImagePreview isFullscreen={false} dataUri={this.state.dataUri} /> </p></LoadingOverlay>
+                                    <ImagePreview isFullscreen={false} dataUri={this.state.dataUri} /></LoadingOverlay>
                             : <Camera onTakePhotoAnimationDone={this.onTakePhotoAnimationDone}/>
                     }
                 </div>
