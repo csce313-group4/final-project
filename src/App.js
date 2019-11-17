@@ -107,6 +107,11 @@ class App extends React.Component {
 
     /* Given the age of someone, get the music decade they are most likely to recognize */
     getMusicYearFromAge(age) {
+        //handle error case
+        if(age < 0) {
+            return age;
+        }
+
         var d = new Date();
         var currentYear = d.getFullYear();
 
