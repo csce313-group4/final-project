@@ -14,14 +14,16 @@ class App extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
+            azureKey: '',
+            algorithmiaKey: '',
             dataUri: null,
             loading: false,
             emotions: this.props.emotions,
+            isHappy: true,
             age: 20,
             loadSong: false,
             opts: {
-            height: '900',
-                width: '1600',
+            height: '800px', width: '960px',
             playerVars: { // https://developers.google.com/youtube/player_parameters
                 autoplay: 1,
                 listType: 'playlist',
@@ -34,20 +36,24 @@ class App extends React.Component {
         };
         this.onSelectImage = this.onSelectImage.bind(this);
         this.onTakePhotoAnimationDone = this.onTakePhotoAnimationDone.bind(this);
-        this.getAge = this.getAge(this);
-        this.getEmotions = this.getEmotions(this);
-        this.getRecs = this.getRecs(this);
-        this.getMusicYearFromAge = this.getMusicYearFromAge(this);
-        this.isThisEmotionHappy = this.isThisEmotionHappy(this);
-        this.getPlaylistFromParams = this.getPlaylistFromParams(this);
+        this.getAge = this.getAge.bind(this);
+        this.getEmotions = this.getEmotions.bind(this);
+        this.getRecs = this.getRecs.bind(this);
+        this.getMusicYearFromAge = this.getMusicYearFromAge.bind(this);
+        this.isThisEmotionHappy = this.isThisEmotionHappy.bind(this);
+        this.getPlaylistFromParams = this.getPlaylistFromParams.bind(this);
     }
 
     onTakePhotoAnimationDone(dataUri) {
-        this.setState({dataUri, loading: true});
-        this.getAge();
-        this.getEmotions();
-        this.getRecs();
-        this.setState({loading: false, loadSong: true})
+        this.setState({dataUri: dataUri, loading: true});
+
+        Promise.all([this.getAge(), this.getEmotions()])
+            .then(([age, emotions])  => {
+                this.setState({age: age});
+                console.log("age:" + age);
+                this.getRecs();
+                this.setState({loading: false, loadSong: true})
+            });
 
     }
 
@@ -60,20 +66,43 @@ class App extends React.Component {
     }
 
     getAge() {
-        var age = this.state.age;
+        return new Promise((resolve, reject) => {
+            var age = this.state.age;
+            const azureSubscriptionKey = this.state.azureKey;
+            const uri = "https://southcentralus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=false&returnFaceLandmarks=false&returnFaceAttributes=age"
+            var buff = new Buffer(this.state.dataUri.replace(/^data:image\/(png|gif|jpeg);base64,/, ''), 'base64');
 
-        //Call api here, change age
-
-        this.setState({age: age});
+            fetch(uri, {
+                method: 'post',
+                body: buff,
+                headers: {
+                    'Content-Type': 'application/octet-stream',
+                    'Ocp-Apim-Subscription-Key': azureSubscriptionKey,
+                }
+            })
+                .then((res) => res.json())
+                .then(function (jsonData) {
+                    if (jsonData.length > 0) {
+                        //get the first face we found
+                        age = jsonData[0].faceAttributes.age;
+                        console.log("Azure: age = " + age);
+                        resolve(age);
+                    } else {
+                        age = -1;
+                        console.log("NO FACES FOUND");
+                        reject();
+                    }
+                })
+                .catch(function () {
+                    reject();
+                });
+        })
     }
 
     getEmotions() {
-        var emotions = this.state.emotions;
-
-
-        // Call api here, change emotions
-        this.setState({emotions: emotions});
-
+        return new Promise((resolve, reject) => {
+            resolve();
+        })
     }
 
     /* Given the age of someone, get the music decade they are most likely to recognize */
@@ -190,26 +219,28 @@ class App extends React.Component {
         opts.playerVars.list = this.getPlaylistFromParams(musicYear, isHappy);
 
         // set recs
-        this.setState({opts: opts});
+        this.setState({opts: opts, isHappy: isHappy});
     }
 
 
     render() {
          if (this.state.loadSong) {
             return (
-                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
+                <div style={{justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
+                    <h3><strong>Your personalized music selection</strong></h3><br/>
+                    <h2>Age: {this.state.age}</h2>
+                    <h2>Happy: {this.state.isHappy.toString()}</h2>
                     <YouTube
                         opts={this.state.opts}
                     />
                 </div>)
         } else {
             return (
-
                 <div className="App">
                     {
                         (this.state.loading)
                             ? <LoadingOverlay active={true} spinner = {<ClipLoader sizeUnit={"px"} size={100} color={'#36d7b7'} loading={true}/>}>
-                                    <p><ImagePreview isFullscreen={false} dataUri={this.state.dataUri} /> </p></LoadingOverlay>
+                                    <ImagePreview isFullscreen={false} dataUri={this.state.dataUri} /></LoadingOverlay>
                             : <Camera onTakePhotoAnimationDone={this.onTakePhotoAnimationDone}/>
                     }
                 </div>
