@@ -210,7 +210,7 @@ class App extends React.Component {
                     return "PL5D7fjEEs5yflZzSZAhxfgQmN6C_6UJ1W";
                 }
             default:
-                return "Invalid year! No playlist id generated";
+                return "PL0B2BFACC0574C36F";
         }
     }
 
