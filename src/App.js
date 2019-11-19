@@ -144,7 +144,7 @@ class App extends React.Component {
         var sadConf = emotion.sadness;
 
         console.log("happy:" + happyConf);
-        console.log("happy:" + sadConf);
+        console.log("sad:" + sadConf);
 
         if (sadConf > happyConf) {
             return false;
