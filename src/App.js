@@ -8,12 +8,14 @@ import 'react-youtube-playlist/dist/styles.scss'
 import ClipLoader from 'react-spinners/ClipLoader';
 import LoadingOverlay from 'react-loading-overlay'
 import ImagePreview from './ImagePreview';
+var Flickr = require('flickr-sdk');
 
 
 class App extends React.Component {
     constructor(props, context) {
         super(props, context);
         this.state = {
+            backgroundImage: '',
             azureKey: '',
             dataUri: null,
             loading: false,
@@ -41,6 +43,7 @@ class App extends React.Component {
         this.getMusicYearFromAge = this.getMusicYearFromAge.bind(this);
         this.isThisEmotionHappy = this.isThisEmotionHappy.bind(this);
         this.getPlaylistFromParams = this.getPlaylistFromParams.bind(this);
+        this.getBackgroundImage = this.getBackgroundImage.bind(this);
     }
 
     onTakePhotoAnimationDone(dataUri) {
@@ -210,6 +213,32 @@ class App extends React.Component {
         }
     }
 
+    getBackgroundImage(isHappy) {
+        const FLICKR_API_KEY = '04d08e66c3f35b0d3223494098bf28bb';
+        var flickr = new Flickr(FLICKR_API_KEY);
+        var backgroundImage = '';
+        var text = 'city calm';
+
+        if (isHappy) {
+            text = 'nature happy';
+        }
+
+        flickr.photos.search({ // FIXME: are these parameters the correct format
+            text: text,
+            safe_search: 1,
+            content_type: '1,2,3,4,5,6',
+            extras: 'url_o'
+        }).then(function (res) {
+            //console.log('yay!', res.body);
+            backgroundImage = res.body; // FIXME: parse response body for a random url_o from the results
+        }).catch(function (err) {
+            console.error('Error searching flickr photos: ', err);
+            backgroundImage = err; // FIXME: remove this
+        });
+
+        return backgroundImage;
+    }
+
     getRecs() {
         var age = this.state.age;
         var emotion = this.state.emotion;
@@ -219,15 +248,16 @@ class App extends React.Component {
         var isHappy = this.isThisEmotionHappy(emotion);
         opts.playerVars.list = this.getPlaylistFromParams(musicYear, isHappy);
         opts.playerVars.index = Math.floor((Math.random() * 10) + 1)
+        var backgroundImage = this.getBackgroundImage(isHappy);
         // set recs
-        this.setState({opts: opts, isHappy: isHappy});
+        this.setState({opts: opts, isHappy: isHappy, backgroundImage: backgroundImage});
     }
 
 
     render() {
          if (this.state.loadSong) {
             return (
-                <div style={{justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
+                <div style={{backgroundImage: `url(${this.state.backgroundImage})`, justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
                     <h3><strong>Your personalized music selection</strong></h3><br/>
                     <h2>Age: {this.state.age}</h2>
                     <h2>Happy: {this.state.isHappy.toString()}</h2>

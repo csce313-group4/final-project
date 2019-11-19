@@ -5,6 +5,7 @@
   "homepage": "https://csce313-group4.github.io/final-project/",
   "dependencies": {
     "bootstrap": "^4.3.1",
+    "flickr-sdk": "^3.9.0",
     "gh-pages": "^2.1.1",
     "node-sass": "^4.13.0",
     "react": "^16.11.0",
