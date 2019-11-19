@@ -15,10 +15,9 @@ class App extends React.Component {
         super(props, context);
         this.state = {
             azureKey: '',
-            algorithmiaKey: '',
             dataUri: null,
             loading: false,
-            emotions: this.props.emotions,
+            emotion: this.props.emotion,
             isHappy: true,
             age: 20,
             loadSong: false,
@@ -36,8 +35,7 @@ class App extends React.Component {
         };
         this.onSelectImage = this.onSelectImage.bind(this);
         this.onTakePhotoAnimationDone = this.onTakePhotoAnimationDone.bind(this);
-        this.getAge = this.getAge.bind(this);
-        this.getEmotions = this.getEmotions.bind(this);
+        this.getAgeAndEmotion = this.getAgeAndEmotion.bind(this);
         this.getRecs = this.getRecs.bind(this);
         this.getMusicYearFromAge = this.getMusicYearFromAge.bind(this);
         this.isThisEmotionHappy = this.isThisEmotionHappy.bind(this);
@@ -47,10 +45,9 @@ class App extends React.Component {
     onTakePhotoAnimationDone(dataUri) {
         this.setState({dataUri: dataUri, loading: true});
 
-        Promise.all([this.getAge(), this.getEmotions()])
-            .then(([age, emotions])  => {
-                this.setState({age: age});
-                console.log("age:" + age);
+        Promise.all([this.getAgeAndEmotion()])
+            .then( ([[age, emotion]])  => {
+                this.setState({age: age, emotion: emotion});
                 this.getRecs();
                 this.setState({loading: false, loadSong: true})
             });
@@ -65,11 +62,12 @@ class App extends React.Component {
         });
     }
 
-    getAge() {
+    getAgeAndEmotion() {
         return new Promise((resolve, reject) => {
-            var age = this.state.age;
+            var age = -1;
+            var emotion = null;
             const azureSubscriptionKey = this.state.azureKey;
-            const uri = "https://southcentralus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=false&returnFaceLandmarks=false&returnFaceAttributes=age"
+            const uri = "https://southcentralus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=false&returnFaceLandmarks=false&returnFaceAttributes=age,emotion"
             var buff = new Buffer(this.state.dataUri.replace(/^data:image\/(png|gif|jpeg);base64,/, ''), 'base64');
 
             fetch(uri, {
@@ -82,13 +80,15 @@ class App extends React.Component {
             })
                 .then((res) => res.json())
                 .then(function (jsonData) {
+                    console.log(jsonData);
                     if (jsonData.length > 0) {
                         //get the first face we found
                         age = jsonData[0].faceAttributes.age;
+                        emotion = jsonData[0].faceAttributes.emotion;
                         console.log("Azure: age = " + age);
-                        resolve(age);
+                        console.log("Azure: emotion = " + emotion);
+                        resolve([age, emotion]);
                     } else {
-                        age = -1;
                         console.log("NO FACES FOUND");
                         reject();
                     }
@@ -96,12 +96,6 @@ class App extends React.Component {
                 .catch(function () {
                     reject();
                 });
-        })
-    }
-
-    getEmotions() {
-        return new Promise((resolve, reject) => {
-            resolve();
         })
     }
 
@@ -139,17 +133,18 @@ class App extends React.Component {
 
     /* If the happy emotion confidence is greater than the sad emotion confidence, return true */
     isThisEmotionHappy(emotion) {
-        var happyConf = 0.0;
-        var sadConf = 0.0;
-
-        for (var i = 0; i < emotion.length; i++){
-            var item = emotion[i];
-            if (item.label.localeCompare("happy") === 0) {
-                happyConf = item.confidence;
-            } else if (item.label.localeCompare("sad") === 0) {
-                sadConf = item.confidence;
-            }
+        //handle error edge case
+        if(emotion == null) {
+            console.log("emotion was null");
+            console.log(emotion);
+            return true;
         }
+
+        var happyConf = emotion.happiness;
+        var sadConf = emotion.sadness;
+
+        console.log("happy:" + happyConf);
+        console.log("happy:" + sadConf);
 
         if (sadConf > happyConf) {
             return false;
@@ -216,11 +211,11 @@ class App extends React.Component {
 
     getRecs() {
         var age = this.state.age;
-        var emotions = this.state.emotions;
+        var emotion = this.state.emotion;
         var opts = this.state.opts;
         //get the playlistId
         var musicYear = this.getMusicYearFromAge(age);
-        var isHappy = this.isThisEmotionHappy(emotions);
+        var isHappy = this.isThisEmotionHappy(emotion);
         opts.playerVars.list = this.getPlaylistFromParams(musicYear, isHappy);
 
         // set recs
@@ -255,35 +250,15 @@ class App extends React.Component {
 }
 
 App.defaultProps = {
-    "emotions": ([
-        {
-            "confidence": 0.9386989,
-            "label": "Happy"
-        },
-        {
-            "confidence": 0.0483937,
-            "label": "Neutral"
-        },
-        {
-            "confidence": 0.0120008,
-            "label": "Disgust"
-        },
-        {
-            "confidence": 0.000406,
-            "label": "Sad"
-        },
-        {
-            "confidence": 0.0003461,
-            "label": "Fear"
-        },
-        {
-            "confidence": 0.00015,
-            "label": "Angry"
-        },
-        {
-            "confidence": 0.0000046,
-            "label": "Surprise"
-        }
-    ])
+    "emotion": {
+        "anger": 0,
+        "contempt": 0,
+        "disgust": 0.001,
+        "fear": 0,
+        "happiness": 0.989,
+        "neutral": 0.009,
+        "sadness": 0,
+        "surprise": 0
+    }
 };
 export default App;
