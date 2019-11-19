@@ -25,10 +25,11 @@ class App extends React.Component {
             height: '800px', width: '960px',
             playerVars: { // https://developers.google.com/youtube/player_parameters
                 autoplay: 1,
-                listType: 'playlist',
-                list: 'PLNDhBcjuPp0-UCSML4DxFqqc5WN4aGcW1',
+               // listType: 'radio',
+                list: 'PLmS86t_jmQvbpeehASz2Tosvj7d1VN-ZE',
                 playsinline: 1,
                 modestbranding: 1,
+                index: 10,
                 controls: 0
             }
             }
@@ -199,10 +200,10 @@ class App extends React.Component {
                 }
             case 2010:
                 if(isHappy){
-                    return "PLeZgwVkN7bbfVLcqnz9l5RjASqUkBtpBe";
+                    return 'RDQMU2NvmEhYGhM';
                 }
                 else {
-                    return "PL5D7fjEEs5yflZzSZAhxfgQmN6C_6UJ1W";
+                    return "RDAMVM3AtDnEC4zak";
                 }
             default:
                 return "PL0B2BFACC0574C36F";
@@ -217,7 +218,7 @@ class App extends React.Component {
         var musicYear = this.getMusicYearFromAge(age);
         var isHappy = this.isThisEmotionHappy(emotion);
         opts.playerVars.list = this.getPlaylistFromParams(musicYear, isHappy);
-
+        opts.playerVars.index = Math.floor((Math.random() * 10) + 1)
         // set recs
         this.setState({opts: opts, isHappy: isHappy});
     }
