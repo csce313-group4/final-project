@@ -261,6 +261,7 @@ class App extends React.Component {
                     <h3><strong>Your personalized music selection</strong></h3><br/>
                     <h2>Age: {this.state.age}</h2>
                     <h2>Happy: {this.state.isHappy.toString()}</h2>
+                    <h2>Background Image: {this.state.backgroundImage.toString()}</h2> {/* FIXME: remove */}
                     <YouTube
                         opts={this.state.opts}
                     />
