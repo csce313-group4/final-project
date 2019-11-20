@@ -230,7 +230,7 @@ class App extends React.Component {
             extras: 'url_o'
         }).then(function (res) {
             //console.log('yay!', res.body);
-            backgroundImage = res.body['photos']['photo'][Math.floor((Math.random() * 100)]['url_o']; // FIXME: parse response body for a random url_o from the results (works?)
+            backgroundImage = res.body['photos']['photo'][Math.floor((Math.random() * 100))]['url_o']; // FIXME: parse response body for a random url_o from the results (works?)
         }).catch(function (err) {
             console.error('Error searching flickr photos: ', err);
         });
