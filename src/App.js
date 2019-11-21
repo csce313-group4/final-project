@@ -53,9 +53,9 @@ class App extends React.Component {
             .then( ([[age, emotion]])  => {
                 this.setState({age: age, emotion: emotion});
                 this.getRecs();
-                this.setState({loading: false, loadSong: true})
+            }).then(Promise.all[this.getBackgroundImage()]).then(([backgroundImage]) => {
+                this.setState({backgroundImage: backgroundImage, loading: false, loadSong: true});
             });
-
     }
 
     onSelectImage() {
@@ -213,29 +213,43 @@ class App extends React.Component {
         }
     }
 
-    getBackgroundImage(isHappy) {
+    getBackgroundImage() {
         const FLICKR_API_KEY = '04d08e66c3f35b0d3223494098bf28bb';
+        var isHappy = this.state.emotion.happiness > this.state.emotion.sadness;
         var flickr = new Flickr(FLICKR_API_KEY);
-        var backgroundImage = '';
+        var backgroundImage = 'https://live.staticflickr.com/1732/42648827301_8879542e48_k.jpg';
         var text = 'city calm';
 
         if (isHappy) {
             text = 'nature happy';
         }
 
-        flickr.photos.search({ // FIXME: are these parameters the correct format
-            text: text,
-            safe_search: 1,
-            content_type: '1,2,3,4,5,6',
-            extras: 'url_o'
-        }).then(function (res) {
-            //console.log('yay!', res.body);
-            backgroundImage = res.body['photos']['photo'][Math.floor((Math.random() * 100))]['url_o']; // FIXME: parse response body for a random url_o from the results (works?)
-        }).catch(function (err) {
-            console.error('Error searching flickr photos: ', err);
-        });
+        return new Promise((resolve, reject) => {
+                flickr.photos.search({ // FIXME: are these parameters the correct format
+                text: text,
+                safe_search: '1',
+                license: '1,2,3,4,5,6',
+                content_type: '1',
+                extras: 'url_b'
+            })
+                .then((res) => res.json())
+                .then(function (jsonData) {
+                    if (jsonData.length > 0) {
+                        backgroundImage = jsonData['photos']['photo'][Math.floor((Math.random() * 50))]['url_b']; // FIXME: parse response body for a random url_o from the results (works?)
+                        resolve(backgroundImage);
+                    } else {
+                        //console.log("NO IMAGES FOUND");
+                        reject();
+                    }
+                })
+                .catch(function () {
+                    console.error('Error searching flickr photos');
+                    reject();
+                });
+        })
 
-        return backgroundImage;
+
+
     }
 
     getRecs() {
@@ -247,9 +261,8 @@ class App extends React.Component {
         var isHappy = this.isThisEmotionHappy(emotion);
         opts.playerVars.list = this.getPlaylistFromParams(musicYear, isHappy);
         opts.playerVars.index = Math.floor((Math.random() * 10) + 1)
-        var backgroundImage = this.getBackgroundImage(isHappy);
         // set recs
-        this.setState({opts: opts, isHappy: isHappy, backgroundImage: backgroundImage});
+        this.setState({opts: opts, isHappy: isHappy});
     }
 
 
