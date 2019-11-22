@@ -272,9 +272,6 @@ class App extends React.Component {
             return (
                 <div style={{backgroundImage: `url(${this.state.backgroundImage})`, justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
                     <h3><strong>Your personalized music selection</strong></h3><br/>
-                    <h2>Age: {this.state.age}</h2>
-                    <h2>Happy: {this.state.isHappy.toString()}</h2>
-                    {/* FOR DEBUG: <h2>Background Image: {this.state.backgroundImage.toString()}</h2> */}
                     <YouTube
                         opts={this.state.opts}
                     />
