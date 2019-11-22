@@ -53,7 +53,7 @@ class App extends React.Component {
             .then( ([[age, emotion]])  => {
                 this.setState({age: age, emotion: emotion});
                 this.getRecs();
-            }).then(Promise.all[this.getBackgroundImage()]).then(([backgroundImage]) => {
+            }).then(Promise.resolve[this.getBackgroundImage()]).then((backgroundImage) => {
                 this.setState({backgroundImage: backgroundImage, loading: false, loadSong: true});
             });
     }
@@ -230,12 +230,12 @@ class App extends React.Component {
                 safe_search: '1',
                 license: '1,2,3,4,5,6',
                 content_type: '1',
-                extras: 'url_b'
+                extras: 'url_o'
             })
-                .then((res) => res.json())
-                .then(function (jsonData) {
-                    if (jsonData.length > 0) {
-                        backgroundImage = jsonData['photos']['photo'][Math.floor((Math.random() * 50))]['url_b']; // FIXME: parse response body for a random url_o from the results (works?)
+                .then(function (res) {
+                    console.log('yay!', res.body);
+                    if (res.length > 0) {
+                        backgroundImage = res.body['photos']['photo'][Math.floor((Math.random() * 50))]['url_o']; // FIXME: parse response body for a random url_o from the results (works?)
                         resolve(backgroundImage);
                     } else {
                         //console.log("NO IMAGES FOUND");
@@ -273,7 +273,6 @@ class App extends React.Component {
                     <h3><strong>Your personalized music selection</strong></h3><br/>
                     <h2>Age: {this.state.age}</h2>
                     <h2>Happy: {this.state.isHappy.toString()}</h2>
-                    <h2>Background Image: {this.state.backgroundImage.toString()}</h2> {/* FIXME: remove */}
                     <YouTube
                         opts={this.state.opts}
                     />
