@@ -232,15 +232,15 @@ class App extends React.Component {
         }
 
         return new Promise((resolve, reject) => {
-                flickr.photos.search({ // FIXME: are these parameters the correct format
+                flickr.photos.search({
                 text: text,
                 safe_search: '1',
                 license: '1,2,3,4,5,6',
                 content_type: '1',
-                extras: 'url_o'
+                extras: 'url_l'
             })
                 .then((res) => {
-                    backgroundImage = res.body['photos']['photo'][Math.floor((Math.random() * 50))]['url_o']; // FIXME: parse response body for a random url_o from the results (works?)
+                    backgroundImage = res.body['photos']['photo'][Math.floor((Math.random() * 50))]['url_l']; // TODO: err handling on this parse
                     resolve(backgroundImage);
                 })
                 .catch(function () {
