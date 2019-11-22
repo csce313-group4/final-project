@@ -270,8 +270,9 @@ class App extends React.Component {
     render() {
          if (this.state.loadSong) {
             return (
-                <div style={{backgroundImage: `url(${this.state.backgroundImage})`, justifyContent: 'center', alignItems: 'center', height:'100%', width: '100%'}}>
-                    <h3><strong>Your personalized music selection</strong></h3><br/>
+                <div style={{backgroundImage: `url(${this.state.backgroundImage})`, justifyContent: 'center', alignItems: 'center', height:'100vh', width: '100vh'}}>
+                    <div><h3><strong>Your personalized music selection</strong></h3></div>
+                     <br/>
                     <YouTube
                         opts={this.state.opts}
                     />
