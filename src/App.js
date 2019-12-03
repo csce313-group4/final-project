@@ -58,6 +58,7 @@ class App extends React.Component {
                 this.setState({age: age, emotion: emotion});
                 this.getRecs();
             })
+            .catch(err => this.getRecs())
             .then(() => {
                 Promise.all([this.getBackgroundImage()])
                     .then(([backgroundImage]) => {
@@ -109,6 +110,7 @@ class App extends React.Component {
                     }
                 })
                 .catch(function () {
+                    console.log("got her");
                     reject();
                 });
         })
@@ -277,6 +279,7 @@ class App extends React.Component {
                 <Popover.Title as="h3">Instructions</Popover.Title>
                 <Popover.Content>
                     Use the webcam box below to snap a picture of yourself! Press the <strong>white round circle</strong> to take the picture.
+                    If the webcam can't find your face, it will play a random video.
                 </Popover.Content>
             </Popover>
         );
@@ -285,10 +288,10 @@ class App extends React.Component {
             return (
                 <div>
                     <Navbar bg="dark" variant="dark">
-                        <Navbar.Brand href="/">
+                        <Navbar.Brand href="/final-project/">
                             <img
                                 alt=""
-                                src="/logo.svg"
+                                src="/logo.png"
                                 width="30"
                                 height="30"
                                 className="d-inline-block align-top"
@@ -312,10 +315,10 @@ class App extends React.Component {
                 <div className="App">
 
                     <Navbar bg="dark" variant="dark">
-                        <Navbar.Brand href="/">
+                        <Navbar.Brand href="/final-project/">
                             <img
                                 alt=""
-                                src="/logo.svg"
+                                src="/logo.png"
                                 width="30"
                                 height="30"
                                 className="d-inline-block align-top"
