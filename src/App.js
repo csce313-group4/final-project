@@ -300,9 +300,11 @@ class App extends React.Component {
 
                     <div><h3><strong>Your personalized music selection</strong></h3></div>
                      <br/>
+                     <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
                     <YouTube
-                        opts={this.state.opts}
+                    any    opts={this.state.opts}
                     />
+                     </div>
                 </div>)
         } else {
             return (
