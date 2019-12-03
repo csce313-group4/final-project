@@ -1,6 +1,10 @@
 import React from 'react';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Popover from 'react-bootstrap/Popover';
+import Button from 'react-bootstrap/Button';
+import Navbar from 'react-bootstrap/Navbar';
 import Camera from 'react-html5-camera-photo';
 import 'react-html5-camera-photo/build/css/index.css';
 import YouTube from 'react-youtube';
@@ -268,9 +272,32 @@ class App extends React.Component {
 
 
     render() {
+        const instPopover = (
+            <Popover id="popover-basic">
+                <Popover.Title as="h3">Instructions</Popover.Title>
+                <Popover.Content>
+                    Use the webcam box below to snap a picture of yourself! Press the <strong>white round circle</strong> to take the picture.
+                </Popover.Content>
+            </Popover>
+        );
+
          if (this.state.loadSong) {
             return (
                 <div id="app" style={{backgroundImage: `url(${this.state.backgroundImage})`, backgroundSize: '100% 100%', justifyContent: 'center', alignItems: 'center'}}>
+
+                    <Navbar bg="dark" variant="dark">
+                        <Navbar.Brand href="/">
+                            <img
+                                alt=""
+                                src="/logo.svg"
+                                width="30"
+                                height="30"
+                                className="d-inline-block align-top"
+                            />{' '}
+                            <strong>MusicFace</strong>
+                        </Navbar.Brand>
+                    </Navbar>
+
                     <div><h3><strong>Your personalized music selection</strong></h3></div>
                      <br/>
                     <YouTube
@@ -280,6 +307,23 @@ class App extends React.Component {
         } else {
             return (
                 <div className="App">
+
+                    <Navbar bg="dark" variant="dark">
+                        <Navbar.Brand href="/">
+                            <img
+                                alt=""
+                                src="/logo.svg"
+                                width="30"
+                                height="30"
+                                className="d-inline-block align-top"
+                            />{' '}
+                            <strong>MusicFace</strong>
+                        </Navbar.Brand>
+                        <OverlayTrigger trigger="click" placement="right" overlay={instPopover} className="mr-sm-2">
+                            <Button variant="success">Instructions</Button>
+                        </OverlayTrigger>
+                    </Navbar>
+
                     {
                         (this.state.loading)
                             ? <LoadingOverlay active={true} spinner = {<ClipLoader sizeUnit={"px"} size={100} color={'#36d7b7'} loading={true}/>}>
