@@ -283,8 +283,7 @@ class App extends React.Component {
 
          if (this.state.loadSong) {
             return (
-                <div id="app" style={{backgroundImage: `url(${this.state.backgroundImage})`, backgroundSize: '100% 100%', justifyContent: 'center', alignItems: 'center'}}>
-
+                <div>
                     <Navbar bg="dark" variant="dark">
                         <Navbar.Brand href="/">
                             <img
@@ -297,14 +296,16 @@ class App extends React.Component {
                             <strong>MusicFace</strong>
                         </Navbar.Brand>
                     </Navbar>
+                <div id="app" style={{backgroundImage: `url(${this.state.backgroundImage})`, backgroundSize: '100% 100%', justifyContent: 'center', alignItems: 'center'}}>
 
-                    <div><h3><strong>Your personalized music selection</strong></h3></div>
+
                      <br/>
-                     <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
-                    <YouTube
-                    any    opts={this.state.opts}
-                    />
+                     <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '93vh'}}>
+                        <YouTube
+                        any    opts={this.state.opts}
+                        />
                      </div>
+                </div>
                 </div>)
         } else {
             return (
