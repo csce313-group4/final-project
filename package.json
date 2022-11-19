@@ -13,7 +13,7 @@
     "react-dom": "^16.11.0",
     "react-html5-camera-photo": "^1.5.2",
     "react-loading-overlay": "^1.0.1",
-    "react-scripts": "3.2.0",
+    "react-scripts": "5.0.1",
     "react-spinners": "^0.6.1",
     "react-youtube": "^7.9.0",
     "react-youtube-playlist": "^2.2.8"
